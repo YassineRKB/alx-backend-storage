@@ -1,1 +1,2 @@
-#!/usr/bin/env bash
+// Mongodb task 0
+show dbs
