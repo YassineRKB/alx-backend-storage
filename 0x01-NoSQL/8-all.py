@@ -1,1 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+"""module for task 8"""
+
+
+def list_all(mongo_collection):
+    """lists all documents in a collection"""
+    if not mongo_collection:
+        return []
+    return mongo_collection.find()
