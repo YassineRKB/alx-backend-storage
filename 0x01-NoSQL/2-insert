@@ -1,1 +1,2 @@
-#!/usr/bin/env bash
+// Mongodb task 2
+db.school.insert({name: "Holberton school"});
