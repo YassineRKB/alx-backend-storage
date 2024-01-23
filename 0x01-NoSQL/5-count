@@ -1,1 +1,2 @@
-#!/usr/bin/env bash
+// Mongodb task 5
+db.school.count()
