@@ -1,0 +1,2 @@
+// task 13
+db.school.find({name: /Holberton.*/}).forEach(printjson);
