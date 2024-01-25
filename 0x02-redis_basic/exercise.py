@@ -2,8 +2,19 @@
 """Module forexpiring web cache and tracker"""
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Any
+from functools import wraps
 
+
+def count_calls(method: Callable) -> Callable:
+    """Decorator that counts how many times a function has been called"""
+    @wraps(method)
+    def wrapper(self, *args, **kwargs) -> Any:
+        """Wrapper function"""
+        self._redis.incr(method.__qualname__) if isinstance(self._redis, redis.Redis) else None
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 class Cache:
     """Cache class"""
