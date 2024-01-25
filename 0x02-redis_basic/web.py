@@ -19,7 +19,6 @@ def data_cacher(method: Callable) -> Callable:
         if result:
             return result.decode('utf-8')
         result = method(url)
-        store.set(f'count:{url}', 0)
         store.setex(f'result:{url}', 10, result)
         return result
     return invoker
