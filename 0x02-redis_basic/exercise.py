@@ -33,6 +33,44 @@ def call_history(method: Callable) -> Callable:
     return invoker
 
 
+def replay(method: Callable) -> None:
+    """Display the history of calls of a particular function."""
+    if not is_valid_method(method):
+        return
+    rep = get_redis_instance(method)
+    if not rep:
+        return
+    name = method.__qualname__
+    count = get_call_count(rep, name)
+    if count == 0:
+        return
+    print(f'{name} was called {count} times:')
+    print_call_history(rep, name)
+
+
+def is_valid_method(method: Callable) -> bool:
+    """Check if the method is valid for replay."""
+    return method is not None and hasattr(method, '__self__')
+
+
+def get_redis_instance(method: Callable) -> redis.Redis:
+    """Get the Redis instance from the method's __self__ attribute."""
+    return getattr(method.__self__, '_redis', None)
+
+
+def get_call_count(rep: redis.Redis, name: str) -> int:
+    """Get the call count from the Redis instance."""
+    return int(rep.get(name)) if rep.exists(name) > 0 else 0
+
+
+def print_call_history(rep: redis.Redis, name: str) -> None:
+    """Print the call history of the method."""
+    inputs = rep.lrange(f'{name}:inputs', 0, -1)
+    outputs = rep.lrange(f'{name}:outputs', 0, -1)
+    for i, o in zip(inputs, outputs):
+        print(f'{name}(*{i.decode("utf-8")}) -> {o.decode("utf-8")}')
+
+
 class Cache:
     """Cache class"""
 
