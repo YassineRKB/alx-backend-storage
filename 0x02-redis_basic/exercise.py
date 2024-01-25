@@ -11,10 +11,11 @@ def count_calls(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(self, *args, **kwargs) -> Any:
         """Wrapper function"""
-        self._redis.incr(method.__qualname__) if isinstance(self._redis, redis.Redis) else None
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(method.__qualname__)
         return method(self, *args, **kwargs)
-
     return wrapper
+
 
 class Cache:
     """Cache class"""
