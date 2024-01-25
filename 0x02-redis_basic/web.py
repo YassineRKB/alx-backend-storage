@@ -9,7 +9,6 @@ from functools import wraps
 store = redis.Redis()
 
 
-
 def data_cacher(method: Callable) -> Callable:
     """Decorator that caches the output of a function using Redis."""
     @wraps(method)
